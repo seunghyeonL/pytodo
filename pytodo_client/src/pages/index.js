@@ -1,3 +1,6 @@
 export { default as Main } from './Main';
-export { default as Page1 } from './Page1';
-export { default as Page2 } from './Page2';
+export { default as Todos } from './Todos';
+export { default as Write } from './Write';
+export { default as Login } from './Login';
+export { default as Signup } from './Signup';
+export { default as Browse } from './Browse';

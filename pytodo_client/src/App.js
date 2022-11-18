@@ -1,16 +1,21 @@
 import {BrowserRouter, Routes, Route } from 'react-router-dom';
-import {Main, Page1, Page2} from './pages';
-import {Nav} from './components';
+import {Main, Todos, Write, Login, Signup, Browse} from './pages';
+import {Nav, Clock} from './components';
 
 function App() {
+
   return (
     <div>      
       <BrowserRouter>
-      <Nav></Nav>
-        <Routes>
+      <Nav />
+      <Clock /> 
+          <Routes>
           <Route path='/' element={<Main />}></Route>
-          <Route path='/page1' element={<Page1 />}></Route>
-          <Route path='/page2' element={<Page2 />}></Route>
+          <Route path='/Todos' element={<Todos />}></Route>
+          <Route path='/Write' element={<Write />}></Route>
+          <Route path='/Login' element={<Login />}></Route>
+          <Route path='/Signup' element={<Signup />}></Route>
+          <Route path='/Browse' element={<Browse />}></Route>
         </Routes>
       </BrowserRouter>      
     </div>
