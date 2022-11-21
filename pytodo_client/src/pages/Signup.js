@@ -1,16 +1,10 @@
 import { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import axios from 'axios';
+import { apiURL, config } from '../api';
 
 function Signup() {
     const navigate = useNavigate();
-
-    const config = {
-      headers: {
-        'Content-Type': 'application/json'
-      },
-      withCredentials: true
-    };
   
     const [inputInfo, setInputInfo] = useState({
       username: '',
@@ -44,7 +38,7 @@ function Signup() {
       if (event.target.placeholder === 'username') {
         if (regUsername.test(event.target.value)) {
           axios
-            .get(`http://localhost:8000/check?username=${inputInfo.username}`, config)
+            .get(`${apiURL}/check?username=${inputInfo.username}`, config)
             .then((res) => {
               if (res.data.message === 'username available!') {
                 setCheckText({ ...checkText, username: '사용 가능한 아이디 입니다.' });
@@ -84,7 +78,7 @@ function Signup() {
         const sending = inputInfo;
         delete sending.passwordCheck;
         axios.post(
-            'http://localhost:8000/signup', sending, config).then((res) => {
+            `${apiURL}/signup`, sending, config).then((res) => {
           // 로그인창으로 리다이렉트
           navigate('/Login');
         }).catch(err => {

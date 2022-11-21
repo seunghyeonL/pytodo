@@ -10,13 +10,18 @@ from rest_framework_simplejwt.views import (
 
 urlpatterns = [
     # /monthtodos/2
-    path('monthtodos/<int:user_id>', views.getdays, name='getdays'),
+    path('monthtodos/<str:username>', views.getdays, name='getdays'),
     # /daytodos/2
-    path('daytodos/<int:user_id>', views.gettodos, name='gettodos'),
+    path('daytodos/<str:username>', views.gettodos, name='gettodos'),
     # /check
     path('check', views.double_check, name='double_check'),
     # /signup
-    path('signup', views.signup, name='signup'),      
+    path('signup', views.signup, name='signup'),     
+    # /login
+    path('login', views.login, name='login'),
+    # /write
+    path('write', views.write, name='write'),
+
     # /token
     path("token", TokenObtainPairView.as_view(), name="obtain_token"),
     # /token/refresh

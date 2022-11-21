@@ -1,21 +1,26 @@
 import {BrowserRouter, Routes, Route } from 'react-router-dom';
-import {Main, Todos, Write, Login, Signup, Browse} from './pages';
+import {Main, Todos, Login, Signup, Browse} from './pages';
 import {Nav, Clock} from './components';
+import { useState, useEffect } from 'react'
 
 function App() {
+  const [state, setState] = useState({ login : false, accessToken : '' });
+
+  // useEffect({
+    
+  // })
 
   return (
     <div>      
       <BrowserRouter>
-      <Nav />
+      <Nav state={state} setState={setState}/>
       <Clock /> 
           <Routes>
           <Route path='/' element={<Main />}></Route>
-          <Route path='/Todos' element={<Todos />}></Route>
-          <Route path='/Write' element={<Write />}></Route>
-          <Route path='/Login' element={<Login />}></Route>
-          <Route path='/Signup' element={<Signup />}></Route>
-          <Route path='/Browse' element={<Browse />}></Route>
+          <Route path='/todos' element={<Todos />}></Route> 
+          <Route path='/login' element={<Login setState={setState}/>}></Route>
+          <Route path='/signup' element={<Signup />}></Route>
+          <Route path='/browse' element={<Browse />}></Route>
         </Routes>
       </BrowserRouter>      
     </div>
