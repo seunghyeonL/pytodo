@@ -31,15 +31,16 @@ def str_to_dict(str) :
 
 
 def getdays(request, username) : 
+    year = request.GET['year']
     month = request.GET['month']
 
     target_user = User.objects.get(username = username)
 
-    todolists = Content.objects.filter(username=target_user.id)
+    todolists = Content.objects.filter(user_id=target_user.id)
     days = set()
 
     for todo in todolists :
-        if(todo.pub_date.month == int(month)) :
+        if (todo.pub_date.month == int(month)) & (todo.pub_date.year == int(year)) :
             days.add(todo.pub_date.day)
 
     days = list(days)
@@ -48,6 +49,8 @@ def getdays(request, username) :
 
 
 def gettodos(request, username) :
+    year = request.GET['year']
+    month = request.GET['month']
     day = request.GET['day']
 
     target_user = User.objects.get(username = username)
@@ -61,8 +64,9 @@ def gettodos(request, username) :
     # print(type(todolists[0].pub_date.day), type(day))
 
     for todo in todolists:
-        if todo.pub_date.day == int(day):
+        if (todo.pub_date.year == int(year)) & (todo.pub_date.month == int(month)) & (todo.pub_date.day == int(day)) :
             todos.append({
+                'content_id' : todo.id,
                 'todo' : todo.todo,
                 'pub_date' : todo.pub_date
                 })
@@ -114,16 +118,57 @@ def write(request) :
 
     todo = body['todo']
     username = body['username']
+    now = timezone.now()
 
     target_user = User.objects.get(username = username)
-    new_todo = Content(user_id = target_user.id, todo = todo, pub_date = timezone.now())
+    new_todo = Content(user_id = target_user.id, todo = todo, pub_date = now)
     # new_todo.user_id = target_user.id
     # new_todo.todo = todo
     new_todo.save()
     # print(new_todo.todo)
+    todos = Content.objects.filter(user_id = target_user.id)
+    todolists = []
 
-    response = JsonResponse({ 'message' : 'ok' })
+    for todo in todos :
+        if (todo.pub_date.year == now.year) & (todo.pub_date.month == now.month) & (todo.pub_date.day == now.day) :
+            todolists.append({
+                'content_id' : todo.id,
+                'todo' : todo.todo,
+                'pub_date' : todo.pub_date
+                })
+    
+    response = JsonResponse({ 'data' : todolists ,'message' : 'ok' })
 
     return response
+
+def delete(request) :
+    # print(str(request.body))
+    body = str_to_dict(str(request.body))
+
+    username = body['username']
+    content_id = body['content_id']
+
+    target_user = User.objects.get(username = username)
+
+    target_content = Content.objects.get(id = content_id)
+    year = target_content.pub_date.year
+    month = target_content.pub_date.month
+    day = target_content.pub_date.day
+    target_content.delete()
+
+    todos = Content.objects.filter(user_id = target_user.id)
+    todolists = []
+
+    for todo in todos :
+        if (todo.pub_date.year == year) & (todo.pub_date.month == month) & (todo.pub_date.day == day) :
+            todolists.append({
+                'content_id' : todo.id,
+                'todo' : todo.todo,
+                'pub_date' : todo.pub_date
+                })
+
+    response = JsonResponse({ 'data' : todolists, 'message' : 'ok'})
     
+    return response
+
 

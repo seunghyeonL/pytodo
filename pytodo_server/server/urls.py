@@ -21,6 +21,8 @@ urlpatterns = [
     path('login', views.login, name='login'),
     # /write
     path('write', views.write, name='write'),
+    # /delete
+    path('delete', views.delete, name='delete'),
 
     # /token
     path("token", TokenObtainPairView.as_view(), name="obtain_token"),
