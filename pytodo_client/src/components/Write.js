@@ -1,21 +1,33 @@
 import axios from 'axios';
 import { useState } from 'react'
 import { apiURL, config } from '../api';
+import { tokenVerify } from '../token';
+import { useNavigate } from 'react-router-dom';
 
-function Write({ setTodos }) {
+function Write({ state, setState, setTodos }) {
     const [inputInfo, setInputInfo] = useState('');
     const username = localStorage.getItem('username');
+
+    const navigate = useNavigate();
     
     const handleInput = (event) => {
         setInputInfo(event.target.value);
     }
 
     const handleSubmit = (event) => {
-        axios.post(`${apiURL}/write`, {username : username, todo : inputInfo}, config)
+        tokenVerify(state.accessToken, setState)
+        .then(res => {
+            axios.post(`${apiURL}/write`, {username : username, todo : inputInfo}, config)
             .then(res => {
                 setInputInfo('');
                 setTodos(res.data.data)
             })
+        })
+        .catch(err => {
+            // 'not authorized'모달창
+            navigate('/login')
+        })
+        
     }
 
     return (

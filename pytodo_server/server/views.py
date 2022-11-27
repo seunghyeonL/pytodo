@@ -5,30 +5,31 @@ from django.contrib.auth.models import User
 from .models import Content
 from django.utils import timezone
 
-def str_to_dict(str) :
-    keys = []
-    valeus = []
-    result = {}
-    save = False
-    is_key = True
-    word = ''
-    for i in range(len(str)) :        
-        if (save == True) & (is_key == True) & (str[i] == '\"') :            
-            keys.append(word)
-            word = ''
-            is_key = not is_key            
-        elif (save == True) & (is_key == False) & (str[i] == '\"') :            
-            valeus.append(word)
-            word = ''
-            is_key = not is_key
-        elif save == True :
-            word += str[i]        
-        if str[i] == '\"' :
-            save = not save
-    for i in range(len(keys)) :
-        result[keys[i]] = valeus[i]
-    return result
+# def str_to_dict(str) :
+#     keys = []
+#     valeus = []
+#     result = {}
+#     save = False
+#     is_key = True
+#     word = ''
+#     for i in range(len(str)) :        
+#         if (save == True) & (is_key == True) & (str[i] == '\"') :            
+#             keys.append(word)
+#             word = ''
+#             is_key = not is_key            
+#         elif (save == True) & (is_key == False) & (str[i] == '\"') :            
+#             valeus.append(word)
+#             word = ''
+#             is_key = not is_key
+#         elif save == True :
+#             word += str[i]        
+#         if str[i] == '\"' :
+#             save = not save
+#     for i in range(len(keys)) :
+#         result[keys[i]] = valeus[i]
+#     return result
 
+# 한글 입력 때문에  json.loads()사용하기
 
 def getdays(request, username) : 
     year = request.GET['year']
@@ -85,7 +86,7 @@ def double_check(request) :
     return response
 
 def signup(request) :
-    body = str_to_dict(str(request.body))
+    body = json.loads(request.body)
 
     username = body['username'] 
     password = body['password'] 
@@ -97,7 +98,7 @@ def signup(request) :
     return response
 
 def login(request) :    
-    body = str_to_dict(str(request.body))
+    body = json.loads(request.body)
 
     username = body['username']
     password = body['password']    
@@ -114,8 +115,8 @@ def login(request) :
     return response
 
 def write(request) : 
-    body = str_to_dict(str(request.body))
-
+    body = json.loads(request.body)
+    print(body)
     todo = body['todo']
     username = body['username']
     now = timezone.now()
@@ -143,7 +144,7 @@ def write(request) :
 
 def delete(request) :
     # print(str(request.body))
-    body = str_to_dict(str(request.body))
+    body = json.loads(request.body)
 
     username = body['username']
     content_id = body['content_id']

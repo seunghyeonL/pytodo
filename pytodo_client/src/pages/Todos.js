@@ -4,7 +4,7 @@ import { Write, Delete } from '../components'
 
 import axios from 'axios'
 
-function Todos() {
+function Todos({state, setState}) {
     const [todos, setTodos] = useState([])
 
     const quries = (new URL(window.location)).searchParams;
@@ -37,7 +37,7 @@ function Todos() {
                                 <div>pub_date : {el.pub_date}</div>
                                 {
                                     now.getFullYear() === Number(year) && now.getMonth() + 1 === Number(month) && now.getDate() === Number(date) ?
-                                        <Delete setTodos={setTodos} content_id={el.content_id}/> :
+                                        <Delete state={state} setState={setState} setTodos={setTodos} content_id={el.content_id}/> :
                                         <div></div>
                                 }
                             </div>
@@ -47,7 +47,7 @@ function Todos() {
             }
             {
                 now.getFullYear() === Number(year) && now.getMonth() + 1 === Number(month) && now.getDate() === Number(date) ?
-                    <Write setTodos={setTodos} /> :
+                    <Write state={state} setState={setState} setTodos={setTodos} /> :
                     <div></div>
             }
         </div>
