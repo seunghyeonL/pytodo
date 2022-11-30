@@ -4,7 +4,7 @@ import { apiURL, config } from '../api';
 import { tokenVerify } from '../token';
 import { useNavigate } from 'react-router-dom';
 
-function Write({ state, setState, setTodos }) {
+function Write({ state, setState, setTodos, setModalState }) {
     const [inputInfo, setInputInfo] = useState('');
     const username = localStorage.getItem('username');
 
@@ -20,11 +20,15 @@ function Write({ state, setState, setTodos }) {
             axios.post(`${apiURL}/write`, {username : username, todo : inputInfo}, config)
             .then(res => {
                 setInputInfo('');
-                setTodos(res.data.data)
+                setTodos(res.data.data);
+            })
+            .catch(err =>{
+                setModalState({isOpen:true, text:err})
             })
         })
         .catch(err => {
             // 'not authorized'모달창
+            setModalState({isOpen:true, text:err})
             navigate('/login')
         })
         

@@ -4,7 +4,7 @@ import { tokenVerify } from '../token';
 
 import { useNavigate } from 'react-router-dom';
 
-function Delete({ state, setState, setTodos, content_id }) {
+function Delete({ state, setState, setTodos, setModalState, content_id }) {
     const navigate = useNavigate();
 
     const username = localStorage.getItem('username');
@@ -16,9 +16,13 @@ function Delete({ state, setState, setTodos, content_id }) {
             .then(res => {
                 setTodos(res.data.data)
             })
+            .catch(err => {
+                setModalState({isOpen:true, text:err})
+            })
         })
         .catch(err => {
             // 'not authorized'모달창
+            setModalState({isOpen:true, text:err})
             navigate('/login')
         })
         

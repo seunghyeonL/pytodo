@@ -3,7 +3,7 @@ import { useNavigate } from 'react-router-dom'
 
 import {makeCalendar} from '../calendar'
 
-function Browse() {
+function Browse({setModalState}) {
     const navigate = useNavigate()
 
     const [year, setYear] = useState(new Date().getFullYear());

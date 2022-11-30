@@ -3,7 +3,7 @@ import { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { apiURL, config } from '../api';
 
-function Login({ setState }) {
+function Login({ setState, setModalState}) {
 
     const navigate = useNavigate();
 
@@ -29,13 +29,15 @@ function Login({ setState }) {
                 axios.post(`${apiURL}/token`, { username: inputInfo.username, password: inputInfo.password }, config)
                     .then(res => {
                         setState({ login : true, accessToken : res.data.access});
-                        localStorage.setItem('refreshToken', res.data.refresh)
-                        localStorage.setItem('username', inputInfo.username)
+                        setModalState({ isOpen:true, text:'로그인 되었습니다.'});
+                        localStorage.setItem('refreshToken', res.data.refresh);
+                        localStorage.setItem('username', inputInfo.username);
+                        navigate('/');
                     })
-                navigate('/');
+                
             })
             .catch(err => {
-                console.log('wrong id or password');
+                setModalState({isOpen:true, text:err})
                 // 에러모달 띄우기
             })
         }

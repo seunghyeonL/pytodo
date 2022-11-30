@@ -3,7 +3,7 @@ import { useNavigate } from 'react-router-dom';
 import axios from 'axios';
 import { apiURL, config } from '../api';
 
-function Signup() {
+function Signup({setModalState}) {
     const navigate = useNavigate();
   
     const [inputInfo, setInputInfo] = useState({
@@ -80,9 +80,10 @@ function Signup() {
         axios.post(
             `${apiURL}/signup`, sending, config).then((res) => {
           // 로그인창으로 리다이렉트
+          setModalState({isOpen : true, text : '회원가입 되었습니다.'})
           navigate('/Login');
         }).catch(err => {
-          console.log(err);
+          setModalState({isOpen:true, text : err})
         });
       } else {
         setCheckText({ ...checkText, submit: '입력사항을 모두 올바르게 입력해주세요.' });

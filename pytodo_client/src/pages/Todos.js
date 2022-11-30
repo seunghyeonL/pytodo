@@ -1,11 +1,14 @@
 import { useEffect, useState } from 'react'
 import { apiURL, config } from '../api'
 import { Write, Delete } from '../components'
+import { tokenVerify } from '../token'
+import { useNavigate } from 'react-router-dom'
 
 import axios from 'axios'
 
-function Todos({state, setState}) {
+function Todos({ state, setState, setModalState }) {
     const [todos, setTodos] = useState([])
+    const navigate = useNavigate();
 
     const quries = (new URL(window.location)).searchParams;
 
@@ -19,9 +22,12 @@ function Todos({state, setState}) {
 
         axios.get(`${apiURL}/daytodos/${username}?year=${year}&month=${month}&day=${date}`, config)
             .then(el => {
-                console.log(el.data.data);
                 setTodos(el.data.data);
             })
+            .catch(err => {
+                setModalState({ isOpen: true, text: err })
+            })
+
     }, [])
 
     return (
@@ -37,7 +43,7 @@ function Todos({state, setState}) {
                                 <div>pub_date : {el.pub_date}</div>
                                 {
                                     now.getFullYear() === Number(year) && now.getMonth() + 1 === Number(month) && now.getDate() === Number(date) ?
-                                        <Delete state={state} setState={setState} setTodos={setTodos} content_id={el.content_id}/> :
+                                        <Delete state={state} setState={setState} setTodos={setTodos} setModalState={setModalState} content_id={el.content_id} /> :
                                         <div></div>
                                 }
                             </div>
@@ -47,7 +53,7 @@ function Todos({state, setState}) {
             }
             {
                 now.getFullYear() === Number(year) && now.getMonth() + 1 === Number(month) && now.getDate() === Number(date) ?
-                    <Write state={state} setState={setState} setTodos={setTodos} /> :
+                    <Write state={state} setState={setState} setTodos={setTodos} setModalState={setModalState} /> :
                     <div></div>
             }
         </div>
